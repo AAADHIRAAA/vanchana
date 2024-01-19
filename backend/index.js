@@ -4,10 +4,21 @@ const bodyParser = require('body-parser');
 const cookieParser =require('cookie-parser');
 const PORT=5000;
 const app = express();
+const connection = require('./connection');
 
-app.use(cors());
+connection().then(()=>{
+    
+    app.use(cors());
+    app.options('*', cors());
+    app.use(bodyParser.urlencoded({extended:false}));
+    app.use(bodyParser.json());
+    app.use(cookieParser());
 
-
-app.listen(PORT,()=>{
-    console.log(`Server is running on ${PORT}`);
+    app.listen(PORT,()=>{
+        console.log(`Server is running on ${PORT}`);
+    })
+}).catch((error)=>{
+    console.log(error);
 })
+
+module.exports= app;
